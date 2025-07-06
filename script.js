@@ -44,7 +44,6 @@ function setupEventListeners() {
     document.getElementById('clearAllBtn')?.addEventListener('click', clearAllFiles);
     document.getElementById('askAIButton')?.addEventListener('click', askQuestion);
     document.getElementById('summarizeButton')?.addEventListener('click', generateSummary);
-    document.getElementById('generateQuestionsButton')?.addEventListener('click', generateQuestions); // NEW EVENT LISTENER
     document.getElementById('clearChatButton')?.addEventListener('click', clearChat);
 
     document.querySelectorAll('.department-card').forEach(card =>
@@ -286,27 +285,6 @@ async function generateSummary() {
     } catch {
         chatHistoryDiv.lastChild.remove();
         addChatMessage('❌ Failed to summarize.', 'ai');
-    }
-}
-
-async function generateQuestions() { // NEW FUNCTION
-    if (!uploadedDocuments.length) return addChatMessage('⚠️ Upload documents first.', 'ai');
-    addChatMessage('🤔 Generating questions...', 'ai');
-
-    try {
-        const res = await fetch('https://web-production-e4ce5.up.railway.app//generate_questions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                documents: uploadedDocuments.map(doc => doc.content)
-            })
-        });
-        const data = await res.json();
-        chatHistoryDiv.lastChild.remove();
-        addChatMessage(`<strong>Generated Questions:</strong><br>${data.questions}`, 'ai');
-    } catch {
-        chatHistoryDiv.lastChild.remove();
-        addChatMessage('❌ Failed to generate questions.', 'ai');
     }
 }
 
