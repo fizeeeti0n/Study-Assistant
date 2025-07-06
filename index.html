@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="icon" href="/photo/logo.png" type="image/x-icon">
+    <title>Study Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <meta http-equiv="Content-Security-Policy" content="connect-src *;">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎓</div>
+            <h1>UniStudy AI</h1>
+            <div class="tagline">Your Universal Academic Companion</div>
+            <div class="subtitle">Department-agnostic AI study assistant for university students</div>
+        </div>
+
+        <div class="department-selector card">
+            <div class="card-title">
+                🏫 Select Your Department/Field of Study
+            </div>
+            <div class="department-grid">
+                <div class="department-card" data-dept="engineering">
+                    <div class="department-icon">⚙️</div>
+                    <div class="department-name">Engineering</div>
+                    <div class="department-desc">Mechanical, Civil, Electrical, Chemical</div>
+                </div>
+                <div class="department-card" data-dept="computer-science">
+                    <div class="department-icon">💻</div>
+                    <div class="department-name">Computer Science</div>
+                    <div class="department-desc">Programming, Algorithms, AI, Data</div>
+                </div>
+                <div class="department-card" data-dept="medicine">
+                    <div class="department-icon">🏥</div>
+                    <div class="department-name">Medicine</div>
+                    <div class="department-desc">Anatomy, Physiology, Biochemistry, Pathology</div>
+                </div>
+                <div class="department-card" data-dept="business">
+                    <div class="department-icon">📊</div>
+                    <div class="department-name">Business</div>
+                    <div class="department-desc">Finance, Marketing, Management</div>
+                </div>
+                <div class="department-card" data-dept="law">
+                    <div class="department-icon">⚖️</div>
+                    <div class="department-name">Law</div>
+                    <div class="department-desc">Constitutional, Criminal, Corporate, Tort</div>
+                </div>
+                <div class="department-card" data-dept="arts">
+                    <div class="department-icon">🎨</div>
+                    <div class="department-name">Arts & Humanities</div>
+                    <div class="department-desc">Literature, History, Philosophy</div>
+                </div>
+                <div class="department-card" data-dept="science">
+                    <div class="department-icon">🔬</div>
+                    <div class="department-name">Natural Sciences</div>
+                    <div class="department-desc">Physics, Chemistry, Biology</div>
+                </div>
+                <div class="department-card" data-dept="general">
+                    <div class="department-icon">📚</div>
+                    <div class="department-name">General Studies</div>
+                    <div class="department-desc">Interdisciplinary & Others</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="docCount">0</div>
+                <div class="stat-label">Documents Uploaded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="questionCount">0</div>
+                <div class="stat-label">Questions Asked</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="departmentCount">8</div>
+                <div class="stat-label">Departments Supported</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="accuracyRate">95%</div>
+                <div class="stat-label">AI Accuracy Rate</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="card-title">
+                    📤 Upload Your Study Materials
+                </div>
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">Drag & Drop Your Files Here</div>
+                    <div class="upload-subtext">PDFs, Documents - All formats supported</div>
+                    <div class="file-types">
+                        <span class="file-type">PDF</span>
+                        <span class="file-type">DOCX</span>
+                        <span class="file-type">DOC</span>
+                    </div>
+                </div>
+                <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.gif,.txt,.docx,.doc" style="display: none;">
+                <div style="text-align: center;">
+                    <button class="btn" id="chooseFilesBtn">
+                        Choose Files
+                    </button>
+                    <button class="btn btn-secondary" id="clearAllBtn">
+                        Clear All
+                    </button>
+                </div>
+                <div class="progress-bar" id="progressBar" style="display: none;">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div id="uploadStatus"></div>
+                
+                <div class="file-list" id="uploadedFiles">
+                    </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    📚 Your Document Library
+                </div>
+                <div id="libraryStats" class="status-message status-info">
+                    <span>📊</span>
+                    <span>No documents uploaded yet. Start by uploading your study materials!</span>
+                </div>
+                <div class="file-list" id="libraryFiles">
+                    </div>
+
+                <div class="resource-library">
+                    <h4>🌟 Preloaded Academic Resources</h4>
+                    <div class="resource-categories" id="resourceCategories">
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card qa-section">
+            <div class="card-title">
+                🤖 AI-Powered Q&A Assistant
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" id="questionInput" 
+                        placeholder="Ask any question about your uploaded materials..." 
+                        onkeypress="handleKeyPress(event)">
+                <button class="btn" id="askAIButton">Ask AI</button>
+                <button class="btn btn-success" id="summarizeButton">Summarize</button>
+                <button class="btn btn-secondary" id="clearChatButton">Clear Chat</button>
+            </div>
+            
+            <div class="answer-section">
+                <div class="chat-history" id="chatHistory">
+                    <div class="ai-message">
+                        <div class="message-header">
+                            <span>🤖</span>
+                            <span>AI Assistant</span>
+                        </div>
+                        <div class="message-content">
+                            <p>👋 Welcome to UniStudy AI! I'm your department-agnostic study assistant.</p>
+                            <p><strong>Here's how I can help you:</strong></p>
+                            <ul style="margin: 10px 0; padding-left: 20px;">
+                                <li>📖 Answer questions from your uploaded materials</li>
+                                <li>📝 Create summaries and study guides</li>
+                                <li>🔍 Find specific information across multiple documents</li>
+                                <li>💡 Explain complex concepts in simple terms</li>
+                                <li>📊 Analyze patterns in your study materials</li>
+                            </ul>
+                            <p>Select your department above and upload your study materials to get started!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+
+        <p>&copy; 2025 Ahanaf Shahriar Nafiz. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
