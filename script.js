@@ -472,7 +472,7 @@ async function askQuestion() {
     const messageId = addChatMessage('', 'ai', [], true); // Create an empty AI message for streaming
 
     try {
-        const res = await fetch('https://ai-backend-mj8s.onrender.com/ask', {
+        const res = await fetch('https://ai-backend-6fsy.onrender.com/ask', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -549,7 +549,7 @@ async function generateSummary() {
     const messageId = addChatMessage('', 'ai', [], true); // Create an empty AI message for streaming
 
     try {
-        const res = await fetch('https://ai-backend-mj8s.onrender.com/summarize', {
+        const res = await fetch('https://ai-backend-6fsy.onrender.com/summarize', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -597,7 +597,7 @@ async function generateQuestionsForDocument(documentText) {
     addChatMessage('💡 Generating quick questions...', 'ai'); // This message is fine as it's just text
     try {
         // Standardized URL for generate_questions
-        const res = await fetch('https://ai-backend-mj8s.onrender.com/generate_questions', {
+        const res = await fetch('https://ai-backend-6fsy.onrender.com/generate_questions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
