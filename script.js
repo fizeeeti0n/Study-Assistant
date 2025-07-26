@@ -72,7 +72,9 @@ function addChatMessage(message, sender, images = [], isStreaming = false, isRaw
         copyButton.addEventListener('click', () => {
             // Use a temporary textarea to copy the raw text, not HTML
             const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = message; // Use the original raw message for copying
+            // If the message was raw HTML, we need to extract its text content for copying
+            // Otherwise, use the original raw message
+            tempTextArea.value = isRawHtml ? div.querySelector('.message-content').innerText : message;
             document.body.appendChild(tempTextArea);
             tempTextArea.select();
             document.execCommand('copy'); // Use execCommand for broader compatibility in iframes
@@ -101,7 +103,8 @@ function addChatMessage(message, sender, images = [], isStreaming = false, isRaw
     }
 
     // Highlight code blocks if highlight.js is loaded (for AI messages)
-    if (sender === 'ai' && typeof hljs !== 'undefined') {
+    // Only apply if not raw HTML, as raw HTML might contain its own formatting
+    if (sender === 'ai' && typeof hljs !== 'undefined' && !isRawHtml) {
         setTimeout(() => {
             div.querySelectorAll('pre code').forEach(block => {
                 hljs.highlightElement(block);
@@ -110,9 +113,10 @@ function addChatMessage(message, sender, images = [], isStreaming = false, isRaw
     }
 
     // Store message in chat history (store raw message, not processed HTML)
+    // For raw HTML messages, we store the original HTML string
     const chatEntry = {
         sender,
-        message,
+        message: isRawHtml ? message : message, // Store the original message for chat history
         timestamp: new Date().toISOString(),
         images: images.map(img => ({ mimeType: img.mimeType, data: img.data }))
     };
@@ -161,7 +165,7 @@ function showTypingIndicator() {
  */
 function removeTypingIndicator() {
     const typingDiv = document.getElementById(TYPING_INDICATOR_ID);
-    if (typingDiv) typingDiv.remove();
+    if (typingDiv) typing_Div.remove();
 }
 
 /**
@@ -292,8 +296,8 @@ async function processFiles(files) {
         }, 50);
 
         try {
-            // Standardized URL for upload
-            const res = await fetch('https://ai-backend-mj8s.onrender.com/upload', { method: 'POST', body: formData });
+            // Standardized URL for upload - FIXED TO RENDER URL
+            const res = await fetch('https://ai-backend-6fsy.onrender.com/upload', { method: 'POST', body: formData });
             clearInterval(interval);
             progressFill.style.width = '100%';
             // Check for non-OK responses before trying to parse JSON
@@ -472,6 +476,7 @@ async function askQuestion() {
     const messageId = addChatMessage('', 'ai', [], true); // Create an empty AI message for streaming
 
     try {
+        // FIXED TO RENDER URL
         const res = await fetch('https://ai-backend-6fsy.onrender.com/ask', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -549,6 +554,7 @@ async function generateSummary() {
     const messageId = addChatMessage('', 'ai', [], true); // Create an empty AI message for streaming
 
     try {
+        // FIXED TO RENDER URL
         const res = await fetch('https://ai-backend-6fsy.onrender.com/summarize', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -596,7 +602,7 @@ async function generateSummary() {
 async function generateQuestionsForDocument(documentText) {
     addChatMessage('💡 Generating quick questions...', 'ai'); // This message is fine as it's just text
     try {
-        // Standardized URL for generate_questions
+        // Standardized URL for generate_questions - FIXED TO RENDER URL
         const res = await fetch('https://ai-backend-6fsy.onrender.com/generate_questions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
